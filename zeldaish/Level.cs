@@ -7,26 +7,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 namespace zeldaish
 {
-    static class Functions
-    {
-        static public void loadheader(String name, out int width, out int height)
-        {
-            using (BinaryReader br = new BinaryReader(File.Open(name + ".dat", FileMode.Open)))
-            {
-                width = br.ReadInt32();
-                height = br.ReadInt32();
-            }
-        }
-        static public void DrawBorderedText(SpriteFont font, SpriteBatch spriteBatch, String text, Vector2 position,
-            Color borderColor, Color color)
-        {
-            spriteBatch.DrawString(font, text, position + new Vector2(1, 1), borderColor);
-            spriteBatch.DrawString(font, text, position + new Vector2(-1, -1), borderColor);
-            spriteBatch.DrawString(font, text, position + new Vector2(-1, 1), borderColor);
-            spriteBatch.DrawString(font, text, position + new Vector2(1, -1), borderColor);
-            spriteBatch.DrawString(font, text, position, color);
-        }
-    }
     public class Level
     {
         public int[,] data, col;

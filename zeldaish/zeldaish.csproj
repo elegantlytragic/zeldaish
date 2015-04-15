@@ -110,6 +110,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Functions.cs" />
     <Compile Include="InputHelper.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -44,62 +44,6 @@ namespace zeldaish
             this.IsMouseVisible = true;
             Content.RootDirectory = "Content";
         }
-        void createlevel(String levelname, int width, int height)
-        {
-            #region header
-            int width2 = width, height2 = height;
-            String[] dest = new String[6] {"null", "null", "null", "null", "null", "null"};
-            int[] destcoords = new int[12] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-            #endregion
-            int[,] data = new int[width, height], coldata = new int[width, height];
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    data[x, y] = 0;
-                    coldata[x, y] = 0;
-                }
-            }
-            using (BinaryWriter bw = new BinaryWriter(File.Open(levelname + ".dat", FileMode.OpenOrCreate)))
-            {
-                bw.Write(width);
-                bw.Write(height);
-                for (int n = 0; n < dest.Length; n++) bw.Write(dest[n]);
-                for (int i = 0; i < destcoords.Length; i++) bw.Write(destcoords[i]);
-                for (int x = 0; x < width; x++)
-                {
-                    for (int y = 0; y < height; y++) bw.Write(data[x, y]);
-                }
-                for (int x = 0; x < width; x++)
-                {
-                    for (int y = 0; y < height; y++) bw.Write(coldata[x, y]);
-                }
-            }
-        }
-        void inittexts(Level level)
-        {
-            for (int n = 0; n <= 19; n++)
-            {
-                if (n <= 5) selects[n] = new Textbox(font, level.dests[n], Color.Black, new Vector2(300, 100 + (n * 20)));
-                else if (n >= 6 && n <= 17) selects[n] = new Textbox(font, level.destcoords[n - 6].ToString(), Color.Black, new Vector2(300, 100 + (n * 20)));
-                else if (n == 18) selects[n] = new Textbox(font, level.width.ToString(), Color.Black, new Vector2(300, 100 + (n * 20)));
-                else if (n == 19) selects[n] = new Textbox(font, level.height.ToString(), Color.Black, new Vector2(300, 100 + (n * 20)));
-            }
-        }
-        void savedests(Level level)
-        {
-            for (int n = 0; n < 19; n++)
-            {
-                if (n <= 5) level.dests[n] = selects[n].value;
-                else if (n >= 5 && n <= 17) level.destcoords[n - 6] = Convert.ToInt32(selects[n].value, 10);
-                else { level.width = Convert.ToInt32(selects[n].value, 10); level.height = Convert.ToInt32(selects[n].value, 10); }
-            }
-        }
-        bool isbetween(int value, int val1, int val2, int value2, int val3, int val4)
-        {
-            if (value >= val1 && value <= val2 && value2 >= val3 && value2 <= val4) return true;
-            else return false;
-        }
         protected override void Initialize()
         {
             base.Initialize();
@@ -165,10 +109,10 @@ namespace zeldaish
                     else
                     {
                         Functions.loadheader(levelselectname, out width2, out height2);
-                        createlevel(levelselectname, 10, 10); editor = new Level(levelselectname, 550, 0, width2, height2, Content.Load<Texture2D>("temple"), 36);
+                        Functions.createlevel(levelselectname, 10, 10); editor = new Level(levelselectname, 550, 0, width2, height2, Content.Load<Texture2D>("temple"), 36);
                     }
                     gameState = GameState.editor;
-                    inittexts(editor);
+                    Functions.inittexts(editor, selects, font);
                 }
             }
             #endregion
@@ -240,7 +184,7 @@ namespace zeldaish
                 {
                     selects[destselect].focused = true;
                     selects[destselect].Update(keys.GetPressedKeys());
-                    if (help.IsNewPress(Keys.Enter)) { selects[destselect].focused = false; destselected = false; savedests(editor); }
+                    if (help.IsNewPress(Keys.Enter)) { selects[destselect].focused = false; destselected = false; Functions.savedests(editor, selects); }
                 }
             }
             #endregion
